@@ -1,13 +1,17 @@
 <script>
 	export default {
 		onLaunch: function() {
-			console.log('App Launch')
+			
 		},
 		onShow: function() {
-			console.log('App Show')
+			
 		},
 		onHide: function() {
-			console.log('App Hide')
+			
+		},
+		Publicdata:{
+			url:"http://jh.scms.sports51.com",
+			systemid:0
 		}
 	}
 </script>

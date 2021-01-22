@@ -11,6 +11,24 @@
 			"style": {
 				"navigationBarTitleText": "uni-app"
 			}
+		},
+		{
+			"path": "pages/aticlelist/aticlelist",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		},
+		{
+			"path": "pages/atclecont/atclecont",
+			"style": {
+				"navigationBarTitleText": "文章详情"
+			}
+		},
+		{
+			"path": "pages/itovther/itovther",
+			"style": {
+				"navigationBarTitleText": "页面"
+			}
 		}
 	],
 	"globalStyle": {

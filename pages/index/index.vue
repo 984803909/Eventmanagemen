@@ -3,7 +3,7 @@
 		<view class="contitle">{{title}}</view>
 		<view class="contaimatch">
 			
-			<view class="mathitem" v-for="(item,index) in arr" :key="index">
+			<view class="mathitem"   v-for="(item,index) in arr" @tap="starnvto(item.id)" :key="index">
 				<image mode ="scaleToFill" v-if="item.systemlogo"  :src="imgurl+item.systemlogo"    class="mataimg"   ></image>
 				<view class="matfont">{{item.systemname}}</view>
 			</view>
@@ -13,16 +13,18 @@
 
 <script>
 	import {reqLogin}from '../../api/index.js'
+	import app from '../../App.vue'
 	export default {
 		data() {
 			return {
-				title: '近期赛事1',
+				title: '近期赛事',
 				imgurl:"http://admin.scms.sports51.com",
 				arr:[]
 			}
 		},
 		onLoad() {
          this.indexrest()
+		   this.imgurl=app.Publicdata.url
 		},
 		methods: {
            indexrest: async function (){
@@ -31,6 +33,12 @@
 			  if(data.code==200){
 				this.arr=data.data
 			  }
+		   },
+		   starnvto(id){
+			   app.Publicdata.systemid=id
+			  uni.redirectTo({
+				  url:`/pages/page/page?id=${id}`,
+			  })
 		   }
 		}
 	}

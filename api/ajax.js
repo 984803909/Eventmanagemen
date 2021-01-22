@@ -1,12 +1,12 @@
    
+	import app from '../App.vue'
 	let  appid="wx6c406745945ce5c0" 
-    let systemid="330100"
 	let userid="0"
 	
 	function Post(url,data) {
 		
         data.appid=appid
-		data.systemid=systemid
+		data.systemid=app.Publicdata.systemid
 		data.userid=userid
         return new Promise((resolve, reject) => {
         uni.request({

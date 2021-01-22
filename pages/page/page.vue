@@ -1,7 +1,7 @@
 <template>
 	<view  class="pagecontai">
 		<view class="pageHeadImag">
-			<image mode ="widthFix" :src="url+pageHeadImag"></image>
+			<image mode ="widthFix" v-if="url" :src="url+pageHeadImag"></image>
 		</view>
 		<view class="pankList" v-if="infoshdata.infoshdata==1" >
 			<view class="pankTtile">{{msg}}</view>
@@ -26,9 +26,10 @@
 				:key="index"
 				>
 				<image  
+				v-if="url"
 				mode ="scaleToFill" 
 				class="swiperImg" 
-				:src="item"></image>
+				:src="url+item.photo"></image>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -36,10 +37,14 @@
 			<view class="Argstitle">
 				<view class="titeljust">
 					<view>新闻</view>
-					<view>更多></view>
+					<view @tap="GetAtlist">更多></view>
 				</view>
 			     <view class="argecontent">
-					 <view class="arcontitem" v-for="(index,key) in infoshoticledata" :key="key" >
+					 <view class="arcontitem"
+					  v-for="(index,key) in infoshoticledata" 
+					  :key="key"
+					  @tap="viewDtail(index.articleid)"
+					   >
 						 <view class="arleft">
 							 <view class="itemBt">{{index.articletitle}}</view>
 							 <view class="itemminfont">
@@ -59,36 +64,35 @@
 
 <script>
 	import ZyTable from '../../components/ZyTable/ZyTable.vue'
-	import {reqInitial,reqSwiper,reqaRist,reqCont}from '../../api/index.js'
+	import app from '../../App.vue'
+	import {reqSwiper,reqaRist,reqCont}from '../../api/index.js'
+   
 	export default{
 		data(){
 			return{
-				url:"http://jh.scms.sports51.com",
-				pageHeadImag:"/s/f/image/2017/04/23/1/20170423011909833.png",
+				url:"",
+				pageHeadImag:"",
 				msg:"这是一场是虚拟的比赛",
 				globakmorank:"金牌排行榜",
 				fenshurank:"分数排行",
-				swiperimg:[
-					"http://jh.scms.sports51.com/s/f/image/2017/09/30/13/20170930135045996.jpg",
-					"http://jh.scms.sports51.com/s/f/image/2017/09/30/13/20170930135200159.jpg",
-					"http://jh.scms.sports51.com/s/f/image/2017/09/30/13/20170930135215899.jpg"
-					],
+				swiperimg:[],
 				infoshdata:"",
 				infoshoticledata:"" //新闻列表
 					
 			}
 		},
-		onLoad(){
-		this.PageInite()
+		onLoad(option){
+		this.url=app.Publicdata.url
+		this.PageInite(option.id)
+		console.log("id的zhi",option.id)
 		},
 		methods:{
-			PageInite:async function(){
-				
-				let swperdata=await reqSwiper({paramval1:0,Paramval2:3})
-				console.log("swperdata的值",swperdata)
-				let reqContdata=await reqCont({"paramval1":0,"paramval2":3})
+			PageInite:async function(id){	
+				let swperdata=await reqSwiper(0,5)
+				let reqContdata=await reqCont({"paramval1":0,"paramval2":3},id)
 				if(reqContdata.data.code==200){
 					let reqdata=reqContdata.data
+					console.log("reqdata1",reqdata.infoshow_system_base_data.data.systemname)
 					if(reqdata.infoshow_system_base_data.code==200){
 			         let ifdata=reqdata.infoshow_system_base_data.data
 					 this.pageHeadImag=ifdata.systembanner
@@ -99,8 +103,23 @@
 				     this.infoshoticledata=ardata
 					}
 				}
+				if(swperdata.data.infoshow_system_picloop_data.code==200){
+					let infordatasys=swperdata.data.infoshow_system_picloop_data.data
+				
+					this.swiperimg=infordatasys
+				}
 				
 				
+			},
+			GetAtlist(){
+				uni.navigateTo({
+					url:'../aticlelist/aticlelist'
+				})
+			},
+			viewDtail(id){
+						uni.navigateTo({
+							url:`../atclecont/atclecont?id=${id}`
+						})
 			}
 		},
 		components:{
@@ -115,6 +134,7 @@
 		display: flex;
 		flex-direction: column;
 		background: #f7f7f7;
+		overflow: ;
 	}
 	.pageHeadImag{
 		width: 100%;
