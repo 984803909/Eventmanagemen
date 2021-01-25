@@ -3,13 +3,13 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "近期赛事"
 			}
 		},
 		{
 			"path": "pages/page/page",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "赛事"
 			}
 		},
 		{
@@ -28,6 +28,23 @@
 			"path": "pages/itovther/itovther",
 			"style": {
 				"navigationBarTitleText": "页面"
+			}
+		},{
+			"path":"pages/movepaly/movepaly",
+			"style":{
+				"navigationBarTitleText": "视频播放"
+			}
+		},
+		{
+			"path":"pages/Phogoup/Phogoup",
+			"style":{
+				"navigationBarTitleText": "相册"
+			}
+		},
+		{
+			"path":"pages/pictitordetai/pictitordetai",
+			"style":{
+				"navigationBarTitleText": "详情"
 			}
 		}
 	],

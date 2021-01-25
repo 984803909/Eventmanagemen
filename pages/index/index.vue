@@ -63,7 +63,7 @@
 		margin-top: 74rpx;
 	}
 	.mathitem{
-		width: 26%;
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;

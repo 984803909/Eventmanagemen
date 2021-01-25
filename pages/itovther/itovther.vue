@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="intor">
 		 <web-view :webview-styles="webviewStyles" :src="src"></web-view>
 	</view>
 </template>
@@ -9,11 +9,19 @@
 	export default{
 		data(){
 			return{
-				src:"https://uniapp.dcloud.io/static/web-view.html"
+				src:"https://www.baidu.com/",
+				 webviewStyles: {
+				                    progress: {
+				                        color: '#FF3333'
+				                    }
+				                }
 			}
 		},
-		onLoad(){
-			this.GetUrl()
+		onLoad(option)
+		{
+			console.log("option的值",option)
+		   this.src=option.url
+			//this.GetUrl()
 		},
 		methods:{
 			GetUrl: async function(){
@@ -30,4 +38,8 @@
 </script>
 
 <style>
+	.intor{
+		width: 100vw;
+		height: 100vh;
+	}
 </style>

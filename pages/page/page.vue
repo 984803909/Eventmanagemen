@@ -33,11 +33,18 @@
 				</swiper-item>
 			</swiper>
 		</view>
+		<view class="pageHeadImag" v-if="infoshdata.showbysitedisplay==1">
+			<image mode ="widthFix" 
+			v-if="url" 
+			:src="url+infoshdata.sitedisplaybtnimg"
+			@tap="Getplauirurl(infoshdata.sitedisplayurl)"
+			></image>
+		</view>
 		<view class="pageArgs">
 			<view class="Argstitle">
 				<view class="titeljust">
 					<view>新闻</view>
-					<view @tap="GetAtlist">更多></view>
+					<view @tap="GetAtlist(0)">更多></view>
 				</view>
 			     <view class="argecontent">
 					 <view class="arcontitem"
@@ -58,14 +65,54 @@
 					 </view>
 				 </view>
 			</view>
+			
 		</view>
+	<view class="pageArgs">
+		<view class="Argstitle">
+			<view class="titeljust">
+				<view>相册</view>
+			</view>
+		   <view class="argecontent">
+			   <jinswiper v-if="!(jinswperdata=='')" :jinswperdata="jinswperdata" />
+		   </view>
+	</view>
+	</view>
+		<view class="pageArgs">
+			<view class="Argstitle">
+				<view class="titeljust">
+					<view>视频</view>
+					<view @tap="GetAtlist(1)">更多></view>
+				</view>
+			     <view class="argecontent">
+					 <view class="arcontitem"
+					  v-for="(index,key) in removedatas" 
+					  :key="key"
+					  @tap="MoveDtail(index.videoid)"
+					   >
+						 <view class="arleft">
+							 <view class="itemBt">{{index.videotitle}}</view>
+							 <view class="itemminfont">
+								 <view>{{index.videodate}}</view>
+								 <view></view>
+							 </view>
+						 </view>
+						 <view class="itemRightImg">
+							 <image mode ="scaleToFill"  :src="url+index.videocover"></image>
+						 </view>
+					 </view>
+				 </view>
+			</view>
+			
+		</view>
+		
 	</view>
 </template>
 
 <script>
 	import ZyTable from '../../components/ZyTable/ZyTable.vue'
 	import app from '../../App.vue'
-	import {reqSwiper,reqaRist,reqCont}from '../../api/index.js'
+    import jinswiper from '../../components/jing-swiper/jing-swiper.vue'
+	import {reqCont}from '../../api/index.js'
    
 	export default{
 		data(){
@@ -77,53 +124,85 @@
 				fenshurank:"分数排行",
 				swiperimg:[],
 				infoshdata:"",
-				infoshoticledata:"" //新闻列表
+				infoshoticledata:"", //新闻列表
+				removedatas:[], //视频列表
+				jinswperdata:""
 					
 			}
 		},
 		onLoad(option){
 		this.url=app.Publicdata.url
 		this.PageInite(option.id)
-		console.log("id的zhi",option.id)
 		},
 		methods:{
 			PageInite:async function(id){	
-				let swperdata=await reqSwiper(0,5)
-				let reqContdata=await reqCont({"paramval1":0,"paramval2":3},id)
+				
+				let reqContdata=await reqCont(
+				{"paramval1":0,"paramval2":3},
+				 id,
+				{"paramval1":0,"paramval2":5},
+				{"paramval1":0,"paramval2":5},
+				{"paramval1":0,"paramval2":5}
+				)
+	
 				if(reqContdata.data.code==200){
 					let reqdata=reqContdata.data
-					console.log("reqdata1",reqdata.infoshow_system_base_data.data.systemname)
+					console.log("reqdata的值",reqdata)
+					if(reqdata.infoshow_system_photocatalog_data.code==200){
+						let reqatdata=reqdata.infoshow_system_photocatalog_data.data
+						this.jinswperdata=reqatdata
+					}
+					if(reqdata.infoshow_system_video_data.code==200){
+						let removedatas=reqdata.infoshow_system_video_data.data
+						this.removedatas=removedatas
+					}
+					if(reqdata.infoshow_system_picloop_data.code==200){
+						let infordatasys=reqdata.infoshow_system_picloop_data.data
+						this.swiperimg=infordatasys
+					}
 					if(reqdata.infoshow_system_base_data.code==200){
 			         let ifdata=reqdata.infoshow_system_base_data.data
 					 this.pageHeadImag=ifdata.systembanner
 					 this.infoshdata=ifdata
+					 uni.setNavigationBarTitle({
+					 title:ifdata.systemname
+					 })
 					}
 					if(reqdata.infoshow_system_article_data.code==200){
 					 let ardata=reqdata.infoshow_system_article_data.data
 				     this.infoshoticledata=ardata
 					}
 				}
-				if(swperdata.data.infoshow_system_picloop_data.code==200){
-					let infordatasys=swperdata.data.infoshow_system_picloop_data.data
-				
-					this.swiperimg=infordatasys
-				}
-				
+
+
 				
 			},
-			GetAtlist(){
+			GetAtlist(num){
+				
 				uni.navigateTo({
-					url:'../aticlelist/aticlelist'
+					url:'../aticlelist/aticlelist?num='+num
 				})
 			},
 			viewDtail(id){
 						uni.navigateTo({
 							url:`../atclecont/atclecont?id=${id}`
 						})
+			},
+			Getplauirurl(url){
+				uni.navigateTo({
+					url:`../itovther/itovther?url=${url}`
+				})
+			},
+			MoveDtail(url){
+				uni.navigateTo({
+				url:`../movepaly/movepaly?id=${url}`
+				})
 			}
 		},
 		components:{
-			ZyTable
+			ZyTable,
+			jinswiper
+			
 		}
 	}
 </script>
@@ -250,4 +329,5 @@
 		width: 100%;
 		height: 100%;
 	}
+
 	</style>
